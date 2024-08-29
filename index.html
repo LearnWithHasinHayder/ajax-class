@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Ajax</title>
+    <link rel="stylesheet" href="https://matcha.mizu.sh/matcha.css" />
+  </head>
+  <body>
+    <h1>Ajax Tutorial - Interactive Cares</h1>
+    <p>Let's do something using ajax</p>
+    <h2>GET Calls</h2>
+    <button onclick="doSomething()">Fetch</button>
+    <button onclick="doSomethingUsingAxios()">Axios</button>
+    <h2>POST calls</h2>
+    <button onclick="postSomething()">Fetch POST</button>
+    <button onclick="postSomethingUsingAxios()">Axios POST</button>
+  </body>
+  <script src="https://cdn.jsdelivr.net/npm/axios@1.7.5/dist/axios.min.js"></script>
+  <script>
+    function doSomething() {
+      fetch('https://jsonplaceholder.typicode.com/todos/4')
+        .then(response => response.json())
+        .then(data => {
+          console.log(data.title, data.completed)
+        })
+        .catch(error => {
+          console.log(error)
+        })
+    }
+
+    function doSomethingUsingAxios(){
+        axios.get("https://jsonplaceholder.typicode.com/todos/4")
+        .then(response=>{
+            console.log(response.data)
+            console.log(response.data.title, response.data.completed)
+        }).catch(error=>{
+            console.log(error)
+        })
+    }
+
+    function postSomething(){
+        const postData = {
+            title: "foo",
+            body: "bar",
+            userId: 1
+        }
+
+        fetch("https://jsonplaceholder.typicode.com/posts", {
+            method:"POST",
+            body:JSON.stringify(postData),
+            headers:{
+                "Content-type":"application/json; charset=UTF-8"
+            }
+        }).then(response=>response.json())
+        .then(data=>{
+            console.log(data)
+        }).catch(error=>{
+            console.log(error)
+        })
+    }
+
+    function postSomethingUsingAxios(){
+        const postData = {
+            title: "foo",
+            body: "bar",
+            userId: 1
+        }
+        axios.post("https://jsonplaceholder.typicode.com/posts",postData,{
+            headers:{
+                "Content-type":"application/json; charset=UTF-8"
+            }
+        })
+        .then(response=>{
+            console.log(response.data)
+        }).catch(error=>{
+            console.log(error)
+        })
+
+    }
+  </script>
+</html>

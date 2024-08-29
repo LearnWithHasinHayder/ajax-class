@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link rel="stylesheet" href="//matcha.mizu.sh/matcha.css" />
+  </head>
+  <body>
+    <h1>Country Search - Interactive Cares</h1>
+    <!-- <input type="text" id="country" placeholder="Enter country name" /> -->
+    <select id="countrySelect">
+        <option value="">Select a country</option>
+    </select>
+    <button onclick="searchCountry()">Search</button>
+
+    <div class="result" style="margin-top: 10px">
+      <p class="status"></p>
+      <p class="name"></p>
+      <p class="capital"></p>
+      <p class="population"></p>
+      <p class="flag"></p>
+    </div>
+  </body>
+  <script src="//cdn.jsdelivr.net/npm/axios@1.7.5/dist/axios.min.js"></script>
+  <script>
+    function searchCountry() {
+      const result = document.querySelector('.result')
+      const status = result.querySelector('.status')
+      const country = document.getElementById('countrySelect').value
+
+      const capitalElement = result.querySelector('.capital')
+      const populationElement = result.querySelector('.population')
+      const flagElement = result.querySelector('.flag')
+      status.textContent = `Searching.... ${country}`
+
+      capitalElement.textContent = ''
+      populationElement.textContent = ''
+      flagElement.textContent = ''
+
+      const endpoint = `https://restcountries.com/v3.1/name/${country}`
+      axios
+        .get(endpoint)
+        .then(response => {
+          const name = country
+          const capital = response.data[0].capital[0]
+          const population = response.data[0].population
+          const flag = response.data[0].flags.png
+          const flagImg = ` <img src="${flag}" alt="Flag of ${name}" width="100">`
+          status.textContent = `Found: ${name}`
+          capitalElement.textContent = `Capital: ${capital}`
+          populationElement.textContent = `Population: ${population}`
+          flagElement.innerHTML = `Flag: ${flagImg}`
+        })
+        .catch(error => {
+          status.textContent = `Country not found: ${country}`
+          capitalElement.textContent = ''
+          populationElement.textContent = ''
+          flagElement.textContent = ''
+        })
+    }
+
+    function populateCountries(){
+        const countrySelect = document.getElementById("countrySelect");
+        const endpoint = "https://restcountries.com/v3.1/all";
+        axios.get(endpoint)
+        .then(response=>{
+            response.data.forEach(country=>{
+                const option = document.createElement("option");
+                option.value = country.name.common;
+                option.textContent = country.name.common;
+                countrySelect.appendChild(option);
+            })
+        }).catch(error=>{
+            console.log(error)
+        })
+    }
+
+    window.onload = populateCountries()
+  </script>
+</html>
